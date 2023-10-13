@@ -17,7 +17,7 @@ Connect the other terminal of Button A to GND on ESP32
 Connect one terminal of Button B to GPIO pin on ESP32
 Connect the other terminal of Button B to GND on ESP32
 
-#Notes
+# Notes
 Ensure you have the Flask library installed on your Raspberry Pi (pip install Flask).
 
 Create a folder called templates in the same directory as your Python script, and inside it, create a file named index.html with your HTML code for the website.
