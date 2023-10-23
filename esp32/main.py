@@ -1,6 +1,29 @@
 from machine import Pin
 from time import sleep
 
+def connect():
+    import network
+ 
+    ssid = "smartspacekk" 
+    password = "smartspace09" 
+ 
+    station = network.WLAN(network.STA_IF)
+ 
+    if station.isconnected() == True:
+        print("Already connected")
+        return
+ 
+    station.active(True)
+    station.connect(ssid, password)
+ 
+    while station.isconnected() == False:
+        pass
+ 
+    print("Connection successful")
+    print(station.ifconfig())
+
+connect()
+
 # Define motor control pins
 motorA_input1 = Pin(5, Pin.OUT)  # Replace X with the GPIO pin number
 motorA_input2 = Pin(4, Pin.OUT)  # Replace Y with the GPIO pin number
