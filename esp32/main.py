@@ -1,10 +1,11 @@
-import machine
+from machine import Pin
+from time import sleep
 
 # Define motor control pins
-motorA_input1 = machine.Pin(5, machine.Pin.OUT)  # Replace X with the GPIO pin number
-motorA_input2 = machine.Pin(4, machine.Pin.OUT)  # Replace Y with the GPIO pin number
-motorB_input1 = machine.Pin(19, machine.Pin.OUT)  # Replace Z with the GPIO pin number
-motorB_input2 = machine.Pin(18, machine.Pin.OUT)  # Replace W with the GPIO pin number
+motorA_input1 = Pin(5, Pin.OUT)  # Replace X with the GPIO pin number
+motorA_input2 = Pin(4, Pin.OUT)  # Replace Y with the GPIO pin number
+motorB_input1 = Pin(19, Pin.OUT)  # Replace Z with the GPIO pin number
+motorB_input2 = Pin(18, Pin.OUT)  # Replace W with the GPIO pin number
 
 def move_forward():
     motorA_input1.on()
@@ -24,15 +25,13 @@ def stop_motors():
     motorB_input1.off()
     motorB_input2.off()
 
-# UART Configuration
-uart = machine.UART(0, baudrate=115200)
-uart.init(115200, bits=8, parity=None, stop=1)
-
-while True:
-    data = uart.read(1)  # Read one byte
-    if data == b'1':
+def web_control(point):
+    if point == "point_a":
         move_forward()
-    elif data == b'2':
+    elif point == "point_b":
         move_backward()
     else:
         stop_motors()
+
+while True:
+    pass  # Continue running to respond to web requests
