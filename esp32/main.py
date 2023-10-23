@@ -1,38 +1,38 @@
 import machine
-from machine import Pin, UART
-import time
 
-# Initialize UART
-uart = UART(1, baudrate=9600, tx=14, rx=13)
+# Define motor control pins
+motorA_input1 = machine.Pin(5, machine.Pin.OUT)  # Replace X with the GPIO pin number
+motorA_input2 = machine.Pin(4, machine.Pin.OUT)  # Replace Y with the GPIO pin number
+motorB_input1 = machine.Pin(19, machine.Pin.OUT)  # Replace Z with the GPIO pin number
+motorB_input2 = machine.Pin(18, machine.Pin.OUT)  # Replace W with the GPIO pin number
 
-# Define motor pins
-motor1_in1 = Pin(4, Pin.OUT)
-motor1_in2 = Pin(5, Pin.OUT)
-motor2_in1 = Pin(18, Pin.OUT)
-motor2_in2 = Pin(19, Pin.OUT)
+def move_forward():
+    motorA_input1.on()
+    motorA_input2.off()
+    motorB_input1.on()
+    motorB_input2.off()
 
-# Define button pins
-button_a = Pin(12, Pin.IN, Pin.PULL_UP)
-button_b = Pin(27, Pin.IN, Pin.PULL_UP)
+def move_backward():
+    motorA_input1.off()
+    motorA_input2.on()
+    motorB_input1.off()
+    motorB_input2.on()
 
-def control_motor(motor, direction):
-    if motor == 1:
-        motor1_in1.value(direction)
-        motor1_in2.value(not direction)
-    elif motor == 2:
-        motor2_in1.value(direction)
-        motor2_in2.value(not direction)
+def stop_motors():
+    motorA_input1.off()
+    motorA_input2.off()
+    motorB_input1.off()
+    motorB_input2.off()
 
-def check_buttons():
-    if not button_a.value():
-        return 1, 1  # Motor 1, Forward
-    elif not button_b.value():
-        return 1, 0  # Motor 1, Backward
-    else:
-        return None, None
+# UART Configuration
+uart = machine.UART(0, baudrate=115200)
+uart.init(115200, bits=8, parity=None, stop=1)
 
 while True:
-    motor, direction = check_buttons()
-    if motor is not None:
-        control_motor(motor, direction)
-        time.sleep(0.1)
+    data = uart.read(1)  # Read one byte
+    if data == b'1':
+        move_forward()
+    elif data == b'2':
+        move_backward()
+    else:
+        stop_motors()
