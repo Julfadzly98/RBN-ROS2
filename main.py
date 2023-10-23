@@ -3,17 +3,18 @@ import serial
 
 app = Flask(__name__)
 
-ser = serial.Serial('/dev/serial0', 9600) # Open communication with ESP32
-
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/motor/<int:motor_number>/<int:direction>')
-def control_motor(motor_number, direction):
-    command = f"{motor_number}{direction}\n"
-    ser.write(command.encode())
-    return "Motor command sent!"
+@app.route('/<action>')
+def control(action):
+    if action == "point_a":
+        ser.write(b'1')
+    elif action == "point_b":
+        ser.write(b'2')
+    return render_template('index.html')
 
 if __name__ == '__main__':
+    ser = serial.Serial('/dev/ttyS0', baudrate=115200)  # Assuming ESP32 is connected to UART0
     app.run(debug=True, host='0.0.0.0')
