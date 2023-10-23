@@ -1,6 +1,12 @@
 from machine import Pin
 from time import sleep
 
+# Define motor control pins
+motorA_input1 = Pin(5, Pin.OUT)  # Replace X with the GPIO pin number
+motorA_input2 = Pin(4, Pin.OUT)  # Replace Y with the GPIO pin number
+motorB_input1 = Pin(19, Pin.OUT)  # Replace Z with the GPIO pin number
+motorB_input2 = Pin(18, Pin.OUT)  # Replace W with the GPIO pin number
+
 def connect():
     import network
  
@@ -23,12 +29,6 @@ def connect():
     print(station.ifconfig())
 
 connect()
-
-# Define motor control pins
-motorA_input1 = Pin(5, Pin.OUT)  # Replace X with the GPIO pin number
-motorA_input2 = Pin(4, Pin.OUT)  # Replace Y with the GPIO pin number
-motorB_input1 = Pin(19, Pin.OUT)  # Replace Z with the GPIO pin number
-motorB_input2 = Pin(18, Pin.OUT)  # Replace W with the GPIO pin number
 
 def move_forward():
     motorA_input1.on()
@@ -57,4 +57,11 @@ def web_control(point):
         stop_motors()
 
 while True:
-    pass  # Continue running to respond to web requests
+    data = input("Enter 'point_a' to move forward, 'point_b' to move backward, or 'stop' to stop motors: ")
+    if data == "point_a" or data == "point_b":
+        web_control(data)
+    elif data == "stop":
+        stop_motors()
+    else:
+        print("Invalid input. Please enter 'point_a', 'point_b', or 'stop'.")
+
