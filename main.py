@@ -1,11 +1,16 @@
-import serial
-import time
+from machine import Pin, I2C
 
-# Set up the serial connection
-ser = serial.Serial('/dev/serial0', 115200, timeout=1)  # Change the port if necessary
+i2c = I2C(-1, scl=Pin(22), sda=Pin(21))  # Create I2C object
 
-def send_to_esp32(message):
-    ser.write(message.encode('utf-8'))
+def receive_from_raspberry_pi():
+    if i2c.any():
+        return i2c.read()
+    else:
+        return None
 
 # Example usage:
-send_to_esp32('Hello from Raspberry Pi!')
+while True:
+    received_message = receive_from_raspberry_pi()
+    if received_message:
+        print(received_message.decode('utf-8'))
+
