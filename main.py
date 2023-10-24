@@ -1,22 +1,18 @@
-from flask import Flask, render_template, request
-import requests
+from flask import Flask, request
 
 app = Flask(__name__)
 
-ESP32_IP = 'http://esp32_ip_address:port'  # Replace with your ESP32's IP and port
+@app.route('/button1', methods=['POST'])
+def button1():
+    print("Button 1 pressed")
+    # Code to handle button 1 press
+    return 'Button 1 pressed'
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/button', methods=['POST'])
-def button():
-    button_pressed = request.form['button']
-    if button_pressed == '1':
-        requests.post(f'{ESP32_IP}/button', data={'button': '1'})
-    elif button_pressed == '2':
-        requests.post(f'{ESP32_IP}/button', data={'button': '2'})
-    return 'OK'
+@app.route('/button2', methods=['POST'])
+def button2():
+    print("Button 2 pressed")
+    # Code to handle button 2 press
+    return 'Button 2 pressed'
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(host='0.0.0.0', port=80)
