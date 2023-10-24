@@ -1,16 +1,25 @@
-import smbus
+import fcntl
 import time
 
-# Create an I2C object
-bus = smbus.SMBus(1)  # Use 0 for Raspberry Pi 1
+# Define I2C constants
+I2C_SLAVE = 0x0703
+
+# Open the I2C bus
+i2c = open("/dev/i2c-1", "wb", buffering=0)
+
+# Set the I2C slave address
+fcntl.ioctl(i2c, I2C_SLAVE, 0x08)
 
 def send_to_esp32(message):
     try:
         message_bytes = [ord(c) for c in message]  # Convert message to a list of ASCII values
-        bus.write_i2c_block(0x08, message_bytes)  # 0x08 is the ESP32 I2C address
+        i2c.write(bytes([len(message_bytes)] + message_bytes))  # Send length + data
         time.sleep(0.1)  # Add a small delay to allow ESP32 to process the data
     except Exception as e:
         print(f"Error: {e}")
 
 # Example usage:
 send_to_esp32('Hello from Raspberry Pi!')
+
+# Close the I2C bus
+i2c.close()
