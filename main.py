@@ -1,16 +1,10 @@
-from machine import Pin, I2C
+import smbus
 
-i2c = I2C(-1, scl=Pin(22), sda=Pin(21))  # Create I2C object
+# Create an I2C object
+bus = smbus.SMBus(1)  # 1 indicates /dev/i2c-1, for Raspberry Pi 2/3/4. Use 0 for Raspberry Pi 1.
 
-def receive_from_raspberry_pi():
-    if i2c.any():
-        return i2c.read()
-    else:
-        return None
+def send_to_esp32(message):
+    bus.write_i2c_block_data(0x8, 0, [ord(c) for c in message])  # 0x8 is the ESP32 I2C address
 
 # Example usage:
-while True:
-    received_message = receive_from_raspberry_pi()
-    if received_message:
-        print(received_message.decode('utf-8'))
-
+send_to_esp32('Hello from Raspberry Pi!')
