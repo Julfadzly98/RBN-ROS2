@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO 
 import requests
 
 app = Flask(__name__)
