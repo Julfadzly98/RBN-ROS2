@@ -1,10 +1,8 @@
-# Import necessary modules
 from flask import Flask, render_template, request
 import requests
 
 app = Flask(__name__)
 
-# Define the HTML template with two buttons
 html = '''
 <!doctype html>
 <html lang="en">
@@ -21,12 +19,10 @@ html = '''
 </html>
 '''
 
-# Route to render the HTML template
 @app.route('/')
 def index():
     return html
 
-# Route to send a signal to the ESP32
 @app.route('/send_signal', methods=['POST'])
 def send_signal():
     button_pressed = request.form['button']
@@ -36,6 +32,5 @@ def send_signal():
         requests.get('http://ESP32_IP_ADDRESS/signal?button=2')
     return "Signal Sent!"
 
-# Run the application
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
